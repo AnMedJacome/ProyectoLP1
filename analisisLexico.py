@@ -7,7 +7,8 @@ reserved = {
     'while': 'WHILE',
     'repeat': "REPEAT",
 
-    ##
+    ##Alejandra Cotrina
+
 
     ##
 
@@ -161,11 +162,43 @@ t_AND = r'&&'
 
 t_RANGE = r'(\.\.\.|\.\.<)'
 
+##Alejandra Cotrina 
+##
+t_SALTO_LINEA = r'\n'
+t_RETORNO__DE_CARRO = r'\\r'
+t_COMILLA_SIMPLE = r'\\\''
+
+t_MULTIPLICACION = r'\*'
+t_DIVISION = r'/'
+t_MODULO = r'%'
+
+t_ASIGNACION_RESTA = r'-='
+t_ASIGNACION_MULTI = r'\*='
+
+t_DIFERENTE = r'!='
+t_MAYOR = r'>'
+
+t_SLASH = r'/'
+t_I_CORCHETE = r'\['
+t_D_CORCHETE = r'\]'
+
+t_OR = r'\|\|'
+
+t_FLOAT = r'-?\d+\.\d{1,6}'
+
+t_NIL_COALESCING = r'\?\?'
+
+##
+
 def t_COMMENTARY(t):
     r'/\*(.|\n)*\*/'
     pass
 
-##
+##Alejandra Cotrina 
+def t_VARIABLE(t):
+    r'[a-z][a-zA-Z0-9]*'
+    t.type = reserved.get(t.value, 'VARIABLE')
+    return t 
 
 ##
 
