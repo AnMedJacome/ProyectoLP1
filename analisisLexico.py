@@ -255,7 +255,7 @@ t_ASIGNACION_MODULO= r"%="
 t_MENOR= r"<"
 t_MAYOR_IGUAL= r">="
 
-t_CADENA= r'[a-zA-Z]+'
+t_CADENA= r'("[^"]*"|\'[^\']*\')'
 
 t_INTERROGACION= r'\?'
 t_I_PARENTESIS= r'\('
