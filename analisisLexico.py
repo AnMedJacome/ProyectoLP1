@@ -154,7 +154,8 @@ tokens = (
 
     ## Natalia Mawyin
     'CADENA',
-
+    'BOOLEAN',
+    
     # COMPONENTES
     ## Andres Medina
     'DOS_PUNTOS',
