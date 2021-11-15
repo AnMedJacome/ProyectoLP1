@@ -255,6 +255,7 @@ t_IGUAL = r'=='
 t_DOS_PUNTOS = r':'
 t_I_LLAVE = r'{'
 t_D_LLAVE = r'}'
+t_COMA = r','
 
 t_INTEGER = r'-?([0-9]{1,10}|2[0-1][0-9]{1,8})'
 t_DOUBLE = r'-?\d+\.\d{1,15}'
@@ -324,7 +325,7 @@ def t_COMMENTARY(t):
 
 ##Alejandra Cotrina 
 def t_VARIABLE(t):
-    r'[a-zA-Z][a-zA-Z0-9]+'
+    r'[a-zA-Z][a-zA-Z0-9]*'
     t.type = reserved.get(t.value, 'VARIABLE')
     return t 
 
