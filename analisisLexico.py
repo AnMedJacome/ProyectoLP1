@@ -57,7 +57,7 @@ reserved = {
     'catch': 'CATCH',
     'continue': 'CONTINUE',
     'convenience': 'CONVENIENCE',
-    'default': 'DEFAULT'
+    'default': 'DEFAULT',
 
     ##
 
@@ -76,7 +76,7 @@ reserved = {
     'struct': 'STRUCT',
     'try': 'TRY',
     'where': 'WHERE',
-    'protocol': 'PROTOCOL',
+    'protocol': 'PROTOCOL_P',
     'return': 'RETURN',
     'subscript': 'SUBSCRIPT',
     'typealias': 'TYPEALIAS',
