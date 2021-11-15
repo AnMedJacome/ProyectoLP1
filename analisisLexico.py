@@ -47,8 +47,8 @@ reserved = {
     '#sourceLocation': 'NS_SOURCELOCATION',
     '#warning': 'NS_WARNING',
     'Any': 'ANY',
-    'Protocol': 'PROTOCOL',
-    'Self': 'SELF',
+    'Protocol': 'PROTOCOLR',
+    'Self': 'SELFR',
     'Type': 'TYPE',
     'as': 'AS',
     'associativity': 'ASSOCIATIVITY',
@@ -183,7 +183,6 @@ tokens = (
     'RANGE'
     ##
 
-    ##
 
 
          ) + tuple(reserved.values())
@@ -215,8 +214,7 @@ t_AND = r'&&'
 
 t_RANGE = r'(\.\.\.|\.\.<)'
 
-##Alejandra Cotrina 
-##
+## Alejandra Cotrina 
 t_SALTO_LINEA = r'\n'
 t_RETORNO__DE_CARRO = r'\\r'
 t_COMILLA_SIMPLE = r'\\\''
