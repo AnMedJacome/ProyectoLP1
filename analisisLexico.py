@@ -8,6 +8,8 @@ reserved = {
     'repeat': "REPEAT",
 
     ##Alejandra Cotrina
+    'for': 'FOR',
+    'in': "IN",
 
     ## Natalia Mawyin
     'if': 'IF',
@@ -18,7 +20,8 @@ reserved = {
     'Int': 'INT',
     'Double': 'DOUBLER',
 
-    ##
+    ##Alejandra Cotrina
+    'Float': 'FLOATR',
 
     ## Natalia Mawyin
     'Bool': 'BOOL',
@@ -59,7 +62,36 @@ reserved = {
     'convenience': 'CONVENIENCE',
     'default': 'DEFAULT',
 
-    ##
+    ##Alejandra Cotrina
+    'defer': 'DEFER',
+    'deinit': 'DEINIT',
+    'didSet': 'DIDSET','do': 'DO',
+    'dynamic': 'DYNAMIC',
+    'enum': 'ENUM',
+    'extension': 'EXTENSION',
+    'fallthrough': 'FALLTHROUGH',
+    'false': 'FALSE',
+    'fileprivate': 'FILEPRIVATE',
+    'func': 'FUNC',
+    'guard': 'GUARD',
+    'import': 'IMPORT',
+    'indirect': 'INDIRECT',
+    'infix': 'INFIX',
+    'init': 'INIT',
+    'inout': 'INOUT',
+    'internal': 'INTERNAL',
+    'is': 'IS',
+    'lazy': 'LAZY',
+    'let': 'LET',
+    'mutating': 'MUTATING',
+    'nil': 'NIL',
+    'none': 'NONE',
+    'nonmutating': 'NONMUTATING',
+    'open': 'OPEN',
+    'operator': 'OPERATOR',
+    'optional': 'OPTIONAL',
+    'override': 'OVERRIDE',
+    'postfix': 'POSTFIX',
 
     ## Natalia Mawyin
     'precedencegroup': 'PRECEDENCEGROUP',
@@ -93,7 +125,7 @@ reserved = {
     'set': 'SET',
     'super': 'SUPER',
     'left': 'LEFT',
-    'class': 'CLASS',
+    'class': 'CLASS'
 
 }
 
@@ -105,7 +137,10 @@ tokens = (
     'BACKSLASH',
     'TABULACION',
 
-    ##
+    ##Alejandra Cotrina
+    'SALTO_LINEA',
+    'RETORNO__DE_CARRO',
+    'COMILLA_SIMPLE',
 
     ## Natalia Mawyin
     'COMILLA_D',
@@ -116,7 +151,11 @@ tokens = (
     ## Andres Medina
     'ADICION',
     'RESTA',
-    
+
+    ##Alejandra Cotrina
+    'MULTIPLICACION',
+    'DIVISION',
+    'MODULO',
     
     ## Natalia Mawyin
     'INCREMENTO',
@@ -127,7 +166,9 @@ tokens = (
     'ASIGNACION',
     'ASIGNACION_ADICION',
 
-    ##
+    ##Alejandra Cotrina
+    'ASIGNACION_RESTA',
+    'ASIGNACION_MULTI',
 
     ## Natalia Mawyin
     'ASIGNACION_DIVISION',
@@ -138,8 +179,9 @@ tokens = (
     'MENOR_IGUAL',
     'IGUAL',
 
-    ##
-    
+    ##Alejandra Cotrina
+    'DIFERENTE',
+    'MAYOR',
     
     ## Natalia Mawyin
     'MENOR',
@@ -150,7 +192,8 @@ tokens = (
     'INTEGER',
     'DOUBLE',
 
-    ##
+    ##Alejandra Cotrina
+    'FLOAT',
 
     ## Natalia Mawyin
     'CADENA',
@@ -161,8 +204,13 @@ tokens = (
     'DOS_PUNTOS',
     'I_LLAVE',
     'D_LLAVE',
+    'COMA',
 
-    ##
+    ##Alejandra Cotrina
+    'SLASH',
+    'I_CORCHETE',
+    'D_CORCHETE',
+    'VARIABLE',
 
      ## Natalia Mawyin
     'INTERROGACION',
@@ -172,7 +220,8 @@ tokens = (
     # OPERADORES LÓGICOS
     ## Andres Medina
     'AND',
-    ##
+    ##Alejandra Cotrina
+    'OR',
 
     ## Natalia Mawyin
     'NOT',
@@ -180,9 +229,9 @@ tokens = (
     
     # OTROS OPERADORES
     ## Andres Medina
-    'RANGE'
-    ##
-
+    'RANGE',
+    ##Alejandra Cotrina
+    'NIL_COALESCING'
 
 
          ) + tuple(reserved.values())
@@ -269,16 +318,16 @@ def t_BOOLEAN(t):
 ## Andres Medina
 
 def t_COMMENTARY(t):
-    r'/\*(.|\n)*\*/'
+    r'(/\*(.|\n)*\*/|\\\\.*)'
     pass
+
 
 ##Alejandra Cotrina 
 def t_VARIABLE(t):
-    r'[a-z][a-zA-Z0-9]*'
+    r'[a-zA-Z][a-zA-Z0-9]+'
     t.type = reserved.get(t.value, 'VARIABLE')
     return t 
 
-##
 
 
 # Define a rule so we can track line numbers
