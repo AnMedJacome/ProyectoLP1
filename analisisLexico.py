@@ -9,9 +9,9 @@ reserved = {
 
     ##Alejandra Cotrina
 
-
-    ##
-
+    ## Natalia Mawyin
+    'if': 'IF',
+    'else': 'ELSE',
 
     # DATOS PRIMITIVOS
     ## Andres Medina
@@ -20,8 +20,9 @@ reserved = {
 
     ##
 
-    ##
-
+    ## Natalia Mawyin
+    'Bool': 'BOOL',
+    'String': 'STRING',
 
     # PALABRAS RESERVADAS
     ## Andres Medina
@@ -60,7 +61,39 @@ reserved = {
 
     ##
 
-    ##
+    ## Natalia Mawyin
+    'precedencegroup': 'PRECEDENCEGROUP',
+    'some': 'SOME',
+    'throws': 'THROWS',
+    'var': 'VAR',
+    'prefix': 'PREFIX',
+    'required': 'REQUIRED',
+    'static': 'STATIC',
+    'true': 'TRUE',
+    'weak': 'WEAK',
+    'private': 'PRIVATE',
+    'rethrows': 'RETHROWS',
+    'struct': 'STRUCT',
+    'try': 'TRY',
+    'where': 'WHERE',
+    'protocol': 'PROTOCOL',
+    'return': 'RETURN',
+    'subscript': 'SUBSCRIPT',
+    'typealias': 'TYPEALIAS',
+    'precedence': 'PRECEDENCE',
+    'public': 'PUBLIC',
+    'self': 'SELF',
+    'throw': 'THROW',
+    'unowned': 'UNOWNED',
+    'willSet': 'WILLSET',
+    'final': 'FINAL',
+    'right': 'RIGHT',
+    'get': 'GET',
+    'switch': 'SWITCH',
+    'set': 'SET',
+    'super': 'SUPER',
+    'left': 'LEFT',
+    'class': 'CLASS',
 
 }
 
@@ -74,12 +107,20 @@ tokens = (
 
     ##
 
-    ##
+    ## Natalia Mawyin
+    'COMILLA_D',
+    'UNICODE',
+    'ALMOHADILLA',
 
     # OPERADORES MATEMATICOS
     ## Andres Medina
     'ADICION',
     'RESTA',
+    
+    
+    ## Natalia Mawyin
+    'INCREMENTO',
+    'DECREMENTO',
 
     # OPERADORES DE ASIGNACIÓN
     ## Andres Medina
@@ -88,7 +129,9 @@ tokens = (
 
     ##
 
-    ##
+    ## Natalia Mawyin
+    'ASIGNACION_DIVISION',
+    'ASIGNACION_MODULO',
 
     # OPERADORES DE COMPARACIÓN
     ## Andres Medina
@@ -96,8 +139,11 @@ tokens = (
     'IGUAL',
 
     ##
-
-    ##
+    
+    
+    ## Natalia Mawyin
+    'MENOR',
+    'MAYOR_IGUAL',
 
     # DATOS PRIMITIVOS
     ## Andres Medina
@@ -106,7 +152,8 @@ tokens = (
 
     ##
 
-    ##
+    ## Natalia Mawyin
+    'CADENA',
 
     # COMPONENTES
     ## Andres Medina
@@ -116,15 +163,20 @@ tokens = (
 
     ##
 
-     ##
+     ## Natalia Mawyin
+    'INTERROGACION',
+    'I_PARENTESIS',
+    'D_PARENTESIS',
 
     # OPERADORES LÓGICOS
     ## Andres Medina
     'AND',
     ##
 
-    ##
-
+    ## Natalia Mawyin
+    'NOT',
+    
+    
     # OTROS OPERADORES
     ## Andres Medina
     'RANGE'
@@ -188,7 +240,34 @@ t_FLOAT = r'-?\d+\.\d{1,6}'
 
 t_NIL_COALESCING = r'\?\?'
 
-##
+## Natalia Mawyin
+
+t_COMILLA_D= r'\"'
+t_UNICODE= r'u{[0-9a-fA-F]{1,8}}'
+t_ALMOHADILLA= r'\#'
+
+t_INCREMENTO= r"\+\+"
+t_DECREMENTO= r"--"
+
+t_ASIGNACION_DIVISION= r"/="
+t_ASIGNACION_MODULO= r"%="
+
+t_MENOR= r"<"
+t_MAYOR_IGUAL= r">="
+
+t_CADENA= r'("[^"]*"|\'[^\']*\')'
+
+t_INTERROGACION= r'\?'
+t_I_PARENTESIS= r'('
+t_D_PARENTESIS= r')'
+
+t_NOT= r"!"
+
+def t_BOOLEAN(t):
+    r"(true|false)"
+    return t
+
+## Andres Medina
 
 def t_COMMENTARY(t):
     r'/\*(.|\n)*\*/'
