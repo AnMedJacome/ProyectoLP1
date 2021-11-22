@@ -378,7 +378,157 @@ def p_object_method(p):
                     | access_control funcion
                     | MUTATING funcion'''
 
- #TIPO DE DATOS PARAMETRIZADO
+
+# ENUM
+def p_enum(p):
+    '''enum_type : access_control ENUM OBJECT_TYPE I_LLAVE enum_body D_LLAVE'''
+
+def p_enum_body(p):
+    '''enum_body : CASE VARIABLE
+                | CASE VARIABLE enum_type'''
+
+# ESTRUCTURAS DE CONTROL (IF, WHILE, FOR)
+def p_estructura(p):
+    '''estructura : estructura_while
+                  | estructura_if
+                  | estructura_for
+                  | estructura_switch'''
+
+def p_estructura_while(p):
+    '''estructura_while : REPEAT cuerpo WHILE condiciones
+                        | WHILE condiciones cuerpo'''
+    if len(p) == 5:
+        p[0] = p[4]
+    if len(p) == 4:
+        p[0] = p[2]
+
+def p_estructura_if(p):
+    '''estructura_if : IF condiciones cuerpo
+                     | estructura_if ELSEIF condiciones cuerpo
+                     | estructura_if ELSE cuerpo'''
+    if len(p) == 5:
+        p[0] = p[3]
+    if len(p) == 4:
+        p[0] = p[2]
+
+def p_estructura_for(p):
+    '''estructura_for : FOR VARIABLE IN INTEGER RANGE INTEGER cuerpo
+                      | FOR VARIABLE IN INTEGER RANGE VARIABLE cuerpo
+                      | FOR VARIABLE IN array cuerpo
+                      | FOR VARIABLE IN array cuerpo WHERE condiciones
+                      | FOR CASE LET VARIABLE OPCIONAL IN array cuerpo
+                      | FOR CASE LET VARIABLE AS tipoDato IN array cuerpo'''
+
+def p_estructura_switch(p):
+    'estructura_switch : SWITCH I_PARENTESIS VARIABLE D_PARENTESIS I_LLAVE casos DEFAULT varias_instrucciones D_LLAVE'
+
+def p_switch_cases(p):
+    '''casos : CASE valor DOS_PUNTOS varias_instrucciones
+             | CASE valor DOS_PUNTOS varias_instrucciones casos'''
+
+def p_condiciones(p):
+    '''condiciones : condiciones_cmp
+                   | NOT condiciones_cmp'''
+    if len(p) == 3:
+        p[0] = negative_logic_comparison(p[2])
+    else:
+        p[0] = p[1]
+
+def p_condiciones_cmp(p):
+    '''condiciones_cmp : condicion
+                       | condicion operadorLogico condiciones_cmp'''
+    if len(p) == 4:
+        p[0] = logic_comparison(p[2], p[1], p[3])
+    else:
+        p[0] = p[1]
+
+
+def p_condicion(p):
+    '''condicion : valor comparador valor
+                 | I_PARENTESIS valor comparador valor D_PARENTESIS'''
+    if len(p) == 4:
+        first_value = p[1] if not p[1].isdigit() else (int(p[1]) if p[1].find('.') == -1 else float(p[1]))
+        second_value = p[3] if not p[3].isdigit() else (int(p[3]) if p[3].find('.') == -1 else float(p[3]))
+        p[0] = verificar_datos_cmp(first_value, second_value, p[2])
+    else:
+        first_value = p[2] if not p[2].isdigit() else (int(p[2]) if p[2].find('.') == -1 else float(p[2]))
+        second_value = p[4] if not p[4].isdigit() else (int(p[4]) if p[4].find('.') == -1 else float(p[4]))
+        p[0] = verificar_datos_cmp(first_value, second_value, p[3])
+
+# ESTRUCTURAS DE DATOS
+def p_array(p):
+    '''array : I_CORCHETE D_CORCHETE
+             | I_CORCHETE arr_elementos D_CORCHETE'''
+
+def p_arr_elementos(p):
+    '''arr_elementos : valores
+                     | valores COMA arr_elementos'''
+
+def p_arr_change(p):
+    'array_change : VARIABLE I_CORCHETE valor D_CORCHETE ASIGNACION valores'
+
+def p_array_insercion(p):
+    '''array_insercion : VARIABLE PUNTO llamadaFunc'''
+    # llamadaFunc debería tener almacenado una tupla con 3 elementos, el primero es el nombre de la
+    # función, el segundo es el elemento a insertar, y el último es la clave donde se va a guardar
+    p[0] = arr_insertion(p[3][0], p[3][1], p[1])
+
+def p_dictionary(p):
+    '''diccionario : I_CORCHETE tipoDato DOS_PUNTOS tipoDato D_CORCHETE
+                   | DICTIONARY tipoDatoComp_parametrizado'''
+
+def p_asignacion_diccionario(p):
+    'asignacion_dic : encabezado_asignacion VARIABLE DOS_PUNTOS diccionario ASIGNACION dic_elementos'
+    # SE ALMACENA EL VALOR COMO DICCIONARIO DE PYTHON PARA PODER SIMULARLO COMO EL LENGUAJE SWIFT
+    if p[2] in variables:
+        print("[!] Variable anteriormente definida")
+        raise SyntaxError
+    dic = {}
+    dic_cadena = p[6].strip("[]").split(",")
+    for clave in dic_cadena:
+        cadena = clave.split(":")
+        dic[cadena[0]] = cadena[1]
+    variables[p[2]] = dic
+
+def p_diccionario_insercion(p):
+    '''diccionario_insercion : encabezado_asignacion VARIABLE ASIGNACION VARIABLE PUNTO llamadaFunc
+                             | VARIABLE PUNTO llamadaFunc'''
+    # llamadaFunc debería tener almacenado una tupla con 3 elementos, el primero es el nombre de la
+    # función, el segundo es el elemento a insertar, y el último es la clave donde se va a guardar
+    if len(p) == 4:
+        p[0] = dic_insertion(p[3][0], p[3][1], p[3][2], p[1])
+    else:
+        p[0] = dic_insertion(p[6][0], p[6][1], p[6][2], p[2])
+
+def p_diccionario_remover(p):
+    '''diccionario_remover : VARIABLE PUNTO llamadaFunc'''
+    # llamadaFunc debería tener almacenado una tupla con 2 elementos, el primero es el nombre de la
+    # función, y el segundo es la clave que se va a eliminar
+    p[0] = dic_remove(p[3][0], p[3][1], p[1])
+
+
+def p_dic_elementos(p):
+    '''dic_elementos : I_CORCHETE D_CORCHETE
+                     | I_CORCHETE dic_element D_CORCHETE'''
+    if len(p) == 4:
+        p[0] = p[1] + p[2] + p[3]
+    else:
+        p[0] = p[1] + p[2]
+
+def p_dic_element(p):
+    '''dic_element : valor DOS_PUNTOS valor
+                   | valor DOS_PUNTOS valor COMA dic_element'''
+    if len(p) == 4:
+        p[0] = p[1] + p[2] + p[3]
+    else:
+        p[0] = p[1] + p[2] + p[3] + p[4] + p[5]
+
+def p_conjunto(p):
+    '''conjunto : encabezado_asignacion VARIABLE DOS_PUNTOS SETR tipoDatoSimp_parametrizado ASIGNACION array
+                | encabezado_asignacion VARIABLE DOS_PUNTOS SETR tipoDatoSimp_parametrizado I_PARENTESIS D_PARENTESIS'''
+
+    
+#TIPO DE DATOS PARAMETRIZADO
 
 def p_tipo_parametrizado_comp(p):
     'tipoDatoComp_parametrizado : MENOR tipoDato DOS_PUNTOS tipoDato MAYOR'
