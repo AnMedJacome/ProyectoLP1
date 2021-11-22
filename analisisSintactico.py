@@ -1,7 +1,7 @@
 import ply.yacc as yacc
-from lexico import tokens
+from analisisLexico import tokens
 
-# OTRAS FUNCIONES Y VARIABLES DE APOYO PARA EJECUCIÓN DEL PROGRAMA
+# OTRAS FUNCIONES Y VARIABLES DE APOYO PARA EJECUCIÓN DEL PRGRAMA
 variables = {}
 booleanos = ("true", "false")
 
@@ -68,9 +68,62 @@ def logic_comparison(operador, p_valor, s_valor):
 
 def negative_logic_comparison(p_valor):
     return not p_valor
-    
-    
+
+def verificar_datos_cmp(first_value, second_value, operador):
+    if type(first_value) != type(second_value):
+        if not isinstance(first_value, str) and not isinstance(second_value, str):
+            return comparison(operador, first_value, second_value)
+        else:
+            print("[!] No puede comparar un String con un Numero (Entero o Flotante)")
+            raise SyntaxError
+    else:
+        return comparison(operador, first_value, second_value)
+
+def dic_insertion(f_elem, s_elem, t_elem, variable):
+    if f_elem == "updateValue":
+        value = s_elem
+        value = value if not value.isdigit() else (int(value) if value.find(".") == -1 else float(value))
+        key = t_elem
+        key = key if not key.isdigit() else (int(key) if key.find(".") == -1 else float(key))
+        if variable not in variables:
+            print("[!] Variable anteriormente no definida")
+            raise SyntaxError
+        elif isinstance(variable, dict):
+            print("[!] La variable no es un diccionario")
+            raise SyntaxError
+        variables[variable][key] = value
+        return variables[variable]
+
+def dic_remove(f_elem, s_elem, variable):
+    if f_elem == "removeValue":
+        key = s_elem
+        key = key if not key.isdigit() else (int(key) if key.find(".") == -1 else float(key))
+        if variable not in variables:
+            print("[!] Variable anteriormente no definida")
+            raise SyntaxError
+        elif isinstance(variable, dict):
+            print("[!] La variable no es un diccionario")
+            raise SyntaxError
+        return variables[variable].pop(key)
+
+def arr_insertion(f_elem, s_elem, t_elem, variable):
+    if f_elem == "insert":
+        value = s_elem
+        value = value if not value.isdigit() else (int(value) if value.find(".") == -1 else float(value))
+        if not t_elem.isdigit():
+            print("[!] El indice debe ser un número")
+            raise SyntaxError
+        if variable not in variables:
+            print("[!] Variable anteriormente no definida")
+            raise SyntaxError
+        elif isinstance(variable, dict):
+            print("[!] La variable no es un diccionario")
+            raise SyntaxError
+        variables[variable].insert(int(t_elem), value)
+        return variables[variable]
+
 # PARSEO
+
 def p_swift(p):
     '''swift : instrucciones
              | instrucciones swift
@@ -98,12 +151,13 @@ def p_varias_instrucciones(p):
     '''varias_instrucciones : instrucciones
                             | instrucciones varias_instrucciones'''
     p[0] = p[1]
-   
-  
+
 # LIBRERIAS
 
 def p_importar_lib(p):
     'importar_lib : IMPORT OBJECT_TYPE'
+
+# METODO DE LECTURA
 
 # CONTROL DE ACCESO
 
@@ -141,7 +195,8 @@ def p_valor_estructuras(p):
 
 def p_valores(p):
     '''valores : valor
-               | valorEstructurado'''
+               | valorEstructurado
+               | array_get'''
     p[0] = p[1]
 
 def p_tipo_datos(p):
@@ -157,8 +212,7 @@ def p_tipo_datos(p):
         p[0] = p[1]
     else:
         p[0] = p[1] + p[2] + p[3]
-   
- 
+
 # OPERADORES MATEMÁTICOS
 
 def p_expression_operation(p):
@@ -238,9 +292,11 @@ def p_asignacion_descripcion(p):
     elif len(p) == 4:
         p[0] = p[3]
 
+
 def p_asignacion_tipo(p):
     '''asignacion_tipo :  DOS_PUNTOS tipoDato
                         | DOS_PUNTOS tipoDato OPCIONAL'''
+
 
 def p_asignacion_matematica(p):
     'asignacionMatematica : VARIABLE asignacion_operacion factor'
@@ -306,6 +362,8 @@ def p_parametros_metodo(p):
 def p_parametros(p):
     '''parametros : VARIABLE DOS_PUNTOS tipoDato
                   | VARIABLE DOS_PUNTOS tipoDato COMA parametros
+                  | VARIABLE DOS_PUNTOS tipoDato ASIGNACION valores
+                  | VARIABLE DOS_PUNTOS tipoDato ASIGNACION valores COMA parametros
                   | '''
     if len(p) == 4:
         p[0] = p[1] + p[2] + p[3]
@@ -327,17 +385,23 @@ def p_enviar_parametros(p):
         p[0] = p[3]
     elif len(p) == 4:
         p[0] = p[1] + p[2] + p[3]
-    else:
+    elif len(p) == 6:
         p[0] = p[3] + p[4] + p[5]
+    else:
+        p[0] = ""
 
 def p_recibir_parametros(p):
     'recibir_parametros : I_PARENTESIS enviar_parametros D_PARENTESIS'
     p[0] = p[1] + p[2] + p[3]
+    print(p[0])
 
 def p_llamada_func(p):
     'llamadaFunc : VARIABLE recibir_parametros'
-    if p[1] == "removeValue" and p[1] == "print":
+    if p[1] == "removeValue":
         p[0] = (p[1], p[2].strip("()"))
+    elif p[1] == "print":
+        print(p[2].strip("()"))
+        p[0] = p[2]
     elif p[1] == "updateValue" and p[1] == "insert":
         values = p[2].strip("()").split(",")
         p[0] = (p[1], values[0], values[1])
@@ -350,12 +414,13 @@ def p_funcion(p):
 
 def p_body_fm(p):
     '''cuerpo_fun_meth : parametrosMetodo cuerpo
-                       | parametrosMetodo RETURN_ARROW tipoDato cuerpoFunc'''
+                       | parametrosMetodo RETURN_ARROW tipoDato cuerpoFunc
+                       | parametrosMetodo THROWS RETURN_ARROW tipoDato cuerpoFunc'''
 
 def p_retorno(p):
     '''retorno : tipoDato
                | I_PARENTESIS tipoDato COMA retorno D_PARENTESIS'''
-        
+
 # ESTRUCTURA (STRUCT / CLASS)
 
 def p_object_type(p):
@@ -457,21 +522,37 @@ def p_condicion(p):
 
 # ESTRUCTURAS DE DATOS
 def p_array(p):
-    '''array : I_CORCHETE D_CORCHETE
-             | I_CORCHETE arr_elementos D_CORCHETE'''
+    'array : encabezado_asignacion VARIABLE DOS_PUNTOS I_CORCHETE tipoDato D_CORCHETE ASIGNACION I_CORCHETE arr_elementos D_CORCHETE'
+    if p[2] in variables:
+        print("[!] Variable anteriormente no definida")
+        raise SyntaxError
+    if p[9].find(",") != -1:
+        variables[p[2]] = p[9].split(",")
+    else:
+        variables[p[2]] = list(p[9])
+    p[0] = variables[p[2]]
 
 def p_arr_elementos(p):
     '''arr_elementos : valores
-                     | valores COMA arr_elementos'''
+                     | valores COMA arr_elementos
+                     | '''
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 4:
+        p[0] = p[1] + p[2] + p[3]
+    else:
+        p[0] = ""
 
 def p_arr_change(p):
     'array_change : VARIABLE I_CORCHETE valor D_CORCHETE ASIGNACION valores'
+def p_arr_get(p):
+    'array_get : VARIABLE I_CORCHETE valor D_CORCHETE'
 
 def p_array_insercion(p):
     '''array_insercion : VARIABLE PUNTO llamadaFunc'''
     # llamadaFunc debería tener almacenado una tupla con 3 elementos, el primero es el nombre de la
     # función, el segundo es el elemento a insertar, y el último es la clave donde se va a guardar
-    p[0] = arr_insertion(p[3][0], p[3][1], p[1])
+    p[0] = arr_insertion(p[3][0], p[3][1], p[3][2], p[1])
 
 def p_dictionary(p):
     '''diccionario : I_CORCHETE tipoDato DOS_PUNTOS tipoDato D_CORCHETE
@@ -527,7 +608,6 @@ def p_conjunto(p):
     '''conjunto : encabezado_asignacion VARIABLE DOS_PUNTOS SETR tipoDatoSimp_parametrizado ASIGNACION array
                 | encabezado_asignacion VARIABLE DOS_PUNTOS SETR tipoDatoSimp_parametrizado I_PARENTESIS D_PARENTESIS'''
 
-    
 #TIPO DE DATOS PARAMETRIZADO
 
 def p_tipo_parametrizado_comp(p):
@@ -535,14 +615,15 @@ def p_tipo_parametrizado_comp(p):
 
 def p_tipo_parametrizado_simp(p):
     'tipoDatoSimp_parametrizado : MENOR tipoDato MAYOR'
-   
+
 # OPERADORES LOGICOS
 
 def p_op_logico(p):
     '''operadorLogico : AND
                       | OR'''
     p[0] = p[1]
-    
+
+
 # OPERADORES DE COMPARACION
 
 def p_comparacion(p):
@@ -569,4 +650,3 @@ while True:
     if not s: continue
     result = parser.parse(s)
     print(result)
-
