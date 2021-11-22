@@ -13,6 +13,7 @@ reserved = {
 
     ## Natalia Mawyin
     'if': 'IF',
+    'else if': 'ELSEIF',
     'else': 'ELSE',
 
     # DATOS PRIMITIVOS
@@ -26,6 +27,10 @@ reserved = {
     ## Natalia Mawyin
     'Bool': 'BOOL',
     'String': 'STRING',
+
+    # ESTRUCTURAS DE DATOS
+    'Set': 'SETR',
+    'Dictionary': 'DICTIONARY',
 
     # PALABRAS RESERVADAS
     ## Andres Medina
@@ -55,6 +60,7 @@ reserved = {
     'Type': 'TYPE',
     'as': 'AS',
     'associativity': 'ASSOCIATIVITY',
+    'asyn': 'ASYNCHRONOUS',
     'break': 'BREAK',
     'case': 'CASE',
     'catch': 'CATCH',
@@ -131,107 +137,110 @@ reserved = {
 
 # List of token names.
 tokens = (
-    # SIMBOLOS ESPECIALES
-    ## Andres Medina
-    'NULO',
-    'BACKSLASH',
-    'TABULACION',
+             # SIMBOLOS ESPECIALES
+             ## Andres Medina
+             'NULO',
+             'BACKSLASH',
+             'TABULACION',
 
-    ##Alejandra Cotrina
-    'SALTO_LINEA',
-    'RETORNO__DE_CARRO',
-    'COMILLA_SIMPLE',
+             ##Alejandra Cotrina
+             'SALTO_LINEA',
+             'RETORNO__DE_CARRO',
+             'COMILLA_SIMPLE',
 
-    ## Natalia Mawyin
-    'COMILLA_D',
-    'UNICODE',
-    'ALMOHADILLA',
+             ## Natalia Mawyin
+             'COMILLA_D',
+             'UNICODE',
+             'ALMOHADILLA',
 
-    # OPERADORES MATEMATICOS
-    ## Andres Medina
-    'ADICION',
-    'RESTA',
+             # OPERADORES MATEMATICOS
+             ## Andres Medina
+             'ADICION',
+             'RESTA',
 
-    ##Alejandra Cotrina
-    'MULTIPLICACION',
-    'DIVISION',
-    'MODULO',
-    
-    ## Natalia Mawyin
-    'INCREMENTO',
-    'DECREMENTO',
+             ##Alejandra Cotrina
+             'MULTIPLICACION',
+             'DIVISION',
+             'MODULO',
 
-    # OPERADORES DE ASIGNACIÓN
-    ## Andres Medina
-    'ASIGNACION',
-    'ASIGNACION_ADICION',
+             ## Natalia Mawyin
+             'INCREMENTO',
+             'DECREMENTO',
 
-    ##Alejandra Cotrina
-    'ASIGNACION_RESTA',
-    'ASIGNACION_MULTI',
+             # OPERADORES DE ASIGNACIÓN
+             ## Andres Medina
+             'ASIGNACION',
+             'ASIGNACION_ADICION',
 
-    ## Natalia Mawyin
-    'ASIGNACION_DIVISION',
-    'ASIGNACION_MODULO',
+             ##Alejandra Cotrina
+             'ASIGNACION_RESTA',
+             'ASIGNACION_MULTI',
 
-    # OPERADORES DE COMPARACIÓN
-    ## Andres Medina
-    'MENOR_IGUAL',
-    'IGUAL',
+             ## Natalia Mawyin
+             'ASIGNACION_DIVISION',
+             'ASIGNACION_MODULO',
 
-    ##Alejandra Cotrina
-    'DIFERENTE',
-    'MAYOR',
-    
-    ## Natalia Mawyin
-    'MENOR',
-    'MAYOR_IGUAL',
+             # OPERADORES DE COMPARACIÓN
+             ## Andres Medina
+             'MENOR_IGUAL',
+             'IGUAL',
 
-    # DATOS PRIMITIVOS
-    ## Andres Medina
-    'INTEGER',
-    'DOUBLE',
+             ##Alejandra Cotrina
+             'DIFERENTE',
+             'MAYOR',
 
-    ##Alejandra Cotrina
-    'FLOAT',
+             ## Natalia Mawyin
+             'MENOR',
+             'MAYOR_IGUAL',
 
-    ## Natalia Mawyin
-    'CADENA',
-    'BOOLEAN',
-    
-    # COMPONENTES
-    ## Andres Medina
-    'DOS_PUNTOS',
-    'I_LLAVE',
-    'D_LLAVE',
-    'COMA',
+             # DATOS PRIMITIVOS
+             ## Andres Medina
+             'INTEGER',
+             'DOUBLE',
 
-    ##Alejandra Cotrina
-    'SLASH',
-    'I_CORCHETE',
-    'D_CORCHETE',
-    'VARIABLE',
+             ##Alejandra Cotrina
+             'FLOAT',
+             'OBJECT_TYPE',
 
-     ## Natalia Mawyin
-    'INTERROGACION',
-    'I_PARENTESIS',
-    'D_PARENTESIS',
+             ## Natalia Mawyin
+             'CADENA',
+             'BOOLEAN',
 
-    # OPERADORES LÓGICOS
-    ## Andres Medina
-    'AND',
-    ##Alejandra Cotrina
-    'OR',
+             # COMPONENTES
+             ## Andres Medina
+             'DOS_PUNTOS',
+             'I_LLAVE',
+             'D_LLAVE',
+             'COMA',
 
-    ## Natalia Mawyin
-    'NOT',
-    
-    
-    # OTROS OPERADORES
-    ## Andres Medina
-    'RANGE',
-    ##Alejandra Cotrina
-    'NIL_COALESCING'
+             ##Alejandra Cotrina
+             'SLASH',
+             'I_CORCHETE',
+             'D_CORCHETE',
+             'VARIABLE',
+             'PUNTO',
+
+             ## Natalia Mawyin
+             'OPCIONAL',
+             'I_PARENTESIS',
+             'D_PARENTESIS',
+             'RETURN_ARROW',
+
+             # OPERADORES LÓGICOS
+             ## Andres Medina
+             'AND',
+             ##Alejandra Cotrina
+             'OR',
+
+             ## Natalia Mawyin
+             'NOT',
+
+
+             # OTROS OPERADORES
+             ## Andres Medina
+             'RANGE',
+             ##Alejandra Cotrina
+             'NIL_COALESCING'
 
 
          ) + tuple(reserved.values())
@@ -257,14 +266,11 @@ t_I_LLAVE = r'{'
 t_D_LLAVE = r'}'
 t_COMA = r','
 
-t_INTEGER = r'-?([0-9]{1,10}|2[0-1][0-9]{1,8})'
-t_DOUBLE = r'-?\d+\.\d{1,15}'
-
 t_AND = r'&&'
 
 t_RANGE = r'(\.\.\.|\.\.<)'
 
-## Alejandra Cotrina 
+## Alejandra Cotrina
 t_SALTO_LINEA = r'\n'
 t_RETORNO__DE_CARRO = r'\\r'
 t_COMILLA_SIMPLE = r'\\\''
@@ -282,10 +288,9 @@ t_MAYOR = r'>'
 t_SLASH = r'/'
 t_I_CORCHETE = r'\['
 t_D_CORCHETE = r'\]'
+t_PUNTO = r'\.'
 
 t_OR = r'\|\|'
-
-t_FLOAT = r'-?\d+\.\d{1,6}'
 
 t_NIL_COALESCING = r'\?\?'
 
@@ -306,9 +311,10 @@ t_MAYOR_IGUAL= r">="
 
 t_CADENA= r'("[^"]*"|\'[^\']*\')'
 
-t_INTERROGACION= r'\?'
+t_OPCIONAL= r'\?'
 t_I_PARENTESIS= r'\('
 t_D_PARENTESIS= r'\)'
+t_RETURN_ARROW= r'->'
 
 t_NOT= r"!"
 
@@ -316,20 +322,33 @@ def t_BOOLEAN(t):
     r"(true|false)"
     return t
 
-## Andres Medina
+##Alejandra Cotrina
+def t_VARIABLE(t):
+    r'[a-z]([a-zA-Z0-9]|_)*'
+    t.type = reserved.get(t.value, 'VARIABLE')
+    return t
 
+def t_OBJECT_TYPE(t):
+    r'[A-Z][a-zA-Z]*'
+    t.type = reserved.get(t.value, 'OBJECT_TYPE')
+    return t
+
+def t_FLOAT(t):
+    r'-?(\d+\.\d{1,6})'
+    return t
+
+## Andres Medina
 def t_COMMENTARY(t):
     r'(/\*(.|\n)*\*/|\\\\.*)'
     pass
 
+def t_DOUBLE(t):
+    r'-?\d+\.\d{1,15}'
+    return t
 
-##Alejandra Cotrina 
-def t_VARIABLE(t):
-    r'[a-zA-Z][a-zA-Z0-9]*'
-    t.type = reserved.get(t.value, 'VARIABLE')
-    return t 
-
-
+def t_INTEGER(t):
+    r'-?([0-9]{1,10}|2[0-1][0-9]{1,8})'
+    return t
 
 # Define a rule so we can track line numbers
 def t_newline(t):
@@ -363,6 +382,7 @@ func insertionSort<T: Comparable>(arreglo: [T], n: Int) -> [T] {
     while position > 0 && arregloOrdenado[position - 1] > value {
         arregloOrdenado[position] = arregloOrdenado[position - 1]
         position -= 1
+        print(3.2)
       }
   }
   return arregloOrdenado
@@ -371,10 +391,11 @@ func insertionSort<T: Comparable>(arreglo: [T], n: Int) -> [T] {
 
 # Give the lexer some input
 lexer.input(data)
-
+'''
 # Tokenize
 while True:
     tok = lexer.token()
     if not tok:
         break      # No more input
     print(tok.type, tok.value, tok.lineno, tok.lexpos)
+'''
